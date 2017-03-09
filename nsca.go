@@ -30,6 +30,8 @@ type Message struct {
 	Service string
 	// Message is the "plugin output" of the NSCA message [optional]
 	Message string
+	// Timestamp of the message
+	Timestamp uint32
 	// Status is an optional channel that recieves the status of a message delivery attempt
 	Status chan error
 }
@@ -110,7 +112,11 @@ func (n *NSCAServer) Close() {
 
 // Send an NSCA message.
 func (n *NSCAServer) Send(message *Message) error {
-	msg := newDataPacket(n.serverTimestamp, message.State, message.Host, message.Service, message.Message)
+	timestamp := message.Timestamp
+	if timestamp == 0 {
+		timestamp = n.serverTimestamp
+	}
+	msg := newDataPacket(timestamp, message.State, message.Host, message.Service, message.Message)
 	if n.timeout > 0 {
 		n.conn.SetDeadline(time.Now().Add(n.timeout))
 	}
