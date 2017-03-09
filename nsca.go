@@ -31,7 +31,7 @@ type Message struct {
 	// Message is the "plugin output" of the NSCA message [optional]
 	Message string
 	// Status is an optional channel that recieves the status of a message delivery attempt
-	Status chan<- error
+	Status chan error
 }
 
 // RunEndpoint creates a long-lived connection to an NSCA server. Messages sent into the messages
